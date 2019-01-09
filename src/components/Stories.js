@@ -3,6 +3,7 @@ import './Stories.css';
 import Story from './Story';
 import { connect } from 'react-redux';
 import { getReadableStories } from '../selectors/storySelector';
+import { doFetchAllStories } from '../actions/storiesActions';
 
 const COLUMNS = {
   title: {
@@ -26,16 +27,23 @@ const COLUMNS = {
   }
 };
 
-const Stories = ({ stories }) => {
-  return (
-    <div className="stories">
-      <StoriesHeader columns={COLUMNS} />
-      {stories.map(story => {
-        return <Story story={story} key={story.objectID} columns={COLUMNS} />;
-      })}
-    </div>
-  );
-};
+class Stories extends React.Component {
+  componentDidMount = () => {
+    this.props.fetchStories();
+  };
+
+  render() {
+    return (
+      <div className="stories">
+        <StoriesHeader columns={COLUMNS} />
+        {this.props.storiesAsIds.map(id => {
+          debugger;
+          return <Story storyId={id} key={id} columns={COLUMNS} />;
+        })}
+      </div>
+    );
+  }
+}
 
 const StoriesHeader = ({ columns }) => (
   <div className="stories-header">
@@ -49,11 +57,17 @@ const StoriesHeader = ({ columns }) => (
 
 function mapStateToProps(state) {
   return {
-    stories: getReadableStories(state)
+    storiesAsIds: getReadableStories(state)
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchStories: () => dispatch(doFetchAllStories())
   };
 }
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(Stories);

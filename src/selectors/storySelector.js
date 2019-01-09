@@ -1,9 +1,12 @@
 import indexOf from 'lodash/indexOf';
 
 function getReadableStories({ storyState, archivedState }) {
-  return storyState.filter(
-    story => indexOf(archivedState, story.objectID) === -1
-  );
+  debugger;
+  return storyState.ids.filter(id => indexOf(archivedState, id) === -1);
 }
 
-export { getReadableStories };
+function getStoryAsEntity(state, id) {
+  return state.storyState.entities.stories[id];
+}
+
+export { getReadableStories, getStoryAsEntity };

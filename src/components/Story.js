@@ -2,6 +2,7 @@ import React from 'react';
 import './Story.css';
 import { connect } from 'react-redux';
 import { doArchiveStory } from '../actions/archiveActions';
+import { getStoryAsEntity } from '../selectors/storySelector';
 
 const Story = ({ story, columns, onArchive }) => {
   const { title, url, author, num_comments, points, objectID } = story;
@@ -28,7 +29,13 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+function mapStateToProps(state, props) {
+  return {
+    story: getStoryAsEntity(state, props.storyId)
+  };
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Story);
